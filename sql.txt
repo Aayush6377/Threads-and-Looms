@@ -1,0 +1,219 @@
+users: Manages user accounts for clients and contractors.
+fashion_orders: Records fashion design orders placed by clients.
+contractor_applications: Tracks applications from contractors for specific orders.
+order_updates: Stores updates on orders from contractors.
+feedback: Collects feedback from clients regarding orders.
+messages: Facilitates communication between users.
+notifications: Manages notifications for users about updates.
+contracts: Contains details of contracts between clients and contractors.
+order_deliveries: Manages the delivery status of orders.
+order_items: Handles individual items in an order.
+payment_transactions: Records payment transactions related to orders.
+
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('client', 'contractor') NOT NULL,
+    image VARCHAR(255) DEFAULT NULL, 
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    tagline VARCHAR(255) NOT NULL,
+    client_ids JSON NOT NULL,  -- To store an array of client IDs
+    image_path VARCHAR(255) NOT NULL,  -- To store the path of the category image
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE manufacturers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    contact_person VARCHAR(100),
+    email VARCHAR(100) NOT NULL UNIQUE,
+    phone VARCHAR(15),
+    address TEXT,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE products (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    manufacturer_id INT NOT NULL,
+    product_name VARCHAR(255) NOT NULL,
+    product_description TEXT,
+    price DECIMAL(10, 2) NOT NULL,
+    images JSON NOT NULL,  -- Store an array of image URLs
+    average_rating DECIMAL(3, 2) DEFAULT NULL,  -- Store average rating for the product
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (manufacturer_id) REFERENCES manufacturers(id) ON DELETE CASCADE
+);
+
+CREATE TABLE reviews (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    client_id INT NOT NULL,
+    review_text TEXT NOT NULL,
+    rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+    FOREIGN KEY (client_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE contractor_requests (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    client_id INT NOT NULL,
+    contractor_id INT NOT NULL,
+    order_id INT NOT NULL,
+    status ENUM('pending', 'accepted', 'rejected') DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (client_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (contractor_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (order_id) REFERENCES fashion_orders(id) ON DELETE CASCADE
+);
+CREATE TABLE fashion_orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    client_id INT NOT NULL,
+    contractor_id INT DEFAULT NULL,  -- Assigned contractor
+    order_title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    upload_file VARCHAR(255),
+    status ENUM('open', 'waiting-for-contractor', 'in-progress', 'completed') DEFAULT 'open',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (client_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (contractor_id) REFERENCES users(id) ON DELETE SET NULL
+);
+CREATE TABLE notifications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,                     
+    manufacturer_id INT NOT NULL,          
+    message TEXT,                            
+    status ENUM('pending', 'accepted', 'rejected') DEFAULT 'pending', 
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
+    CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT fk_manufacturer_id FOREIGN KEY (manufacturer_id) REFERENCES manufacturers(id) ON DELETE CASCADE
+);
+CREATE TABLE contracts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    manufacturer_id INT,
+    client_id INT,
+    deliverables TEXT,
+    price DECIMAL(10,2),
+    start_date DATE,
+    end_date DATE,
+    status ENUM('Pending', 'Accepted', 'Rejected') DEFAULT 'Pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (manufacturer_id) REFERENCES manufacturers(id),
+    FOREIGN KEY (client_id) REFERENCES users(id)
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE TABLE contractor_applications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    contractor_id INT NOT NULL,
+    capabilities TEXT NOT NULL,
+    sample_status ENUM('not-started', 'in-production', 'completed') DEFAULT 'not-started',
+    status ENUM('applied', 'accepted', 'rejected') DEFAULT 'applied',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES fashion_orders(id) ON DELETE CASCADE,
+    FOREIGN KEY (contractor_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE order_updates (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    contractor_id INT NOT NULL,
+    update_message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES fashion_orders(id) ON DELETE CASCADE,
+    FOREIGN KEY (contractor_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE feedback (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    client_id INT NOT NULL,
+    contractor_id INT NOT NULL,
+    feedback_message TEXT NOT NULL,
+    rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES fashion_orders(id) ON DELETE CASCADE,
+    FOREIGN KEY (client_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (contractor_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    sender_id INT NOT NULL,
+    receiver_id INT NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE
+);
+CREATE TABLE order_deliveries (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    delivery_status ENUM('pending', 'shipped', 'delivered', 'returned') DEFAULT 'pending',
+    tracking_number VARCHAR(255),
+    delivery_date TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES fashion_orders(id) ON DELETE CASCADE
+);
+
+CREATE TABLE order_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    item_name VARCHAR(255) NOT NULL,
+    quantity INT NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES fashion_orders(id) ON DELETE CASCADE
+);
+
+CREATE TABLE payment_transactions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    amount DECIMAL(10, 2) NOT NULL,
+    payment_method ENUM('credit_card', 'paypal', 'bank_transfer') NOT NULL,
+    status ENUM('pending', 'completed', 'failed') DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES fashion_orders(id) ON DELETE CASCADE
+);
+
+
+
+INSERT INTO categories (name, tagline, client_ids, image_path) VALUES 
+('Casual Wear', 'Everyday clothing for comfort and style.', JSON_ARRAY(), 'img/casual.jpeg'),
+('Formal Wear', 'Elegant attire for business or formal events.', JSON_ARRAY(), 'img/formal.jpeg'),
+('Party Wear', 'Trendy outfits for parties and special occasions.', JSON_ARRAY(), 'img/party.jpeg'),
+('Sportswear', 'Activewear for workouts and sports activities.', JSON_ARRAY(), 'img/sportswear.jpeg'),
+('Ethnic Wear', 'Traditional clothing representing different cultures.', JSON_ARRAY(), 'img/ethnic.jpeg'),
+('Winter Wear', 'Stay warm with stylish winter outfits.', JSON_ARRAY(), 'img/winter.jpeg'),
+('Summer Wear', 'Light and breathable outfits for summer.', JSON_ARRAY(), 'img/summer.jpeg'),
+('Designer Wear', 'Exclusive designer outfits for a luxury feel.', JSON_ARRAY(), 'img/designer.jpeg');
+
+
