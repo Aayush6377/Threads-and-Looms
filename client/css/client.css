@@ -1,0 +1,125 @@
+/* Basic styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 90%;
+    margin: 0 auto;
+}
+
+/* Hero Section */
+.hero {
+    background-image: url('../img/contractor_bg_1.jpeg');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    text-align: center;
+    padding: 100px 0;
+}
+
+.hero h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+}
+
+.cta-btn {
+    padding: 15px 50px;
+    background-size: cover;
+    color: white;
+    font-size: 1.5em;
+    text-decoration: none;
+    border: none;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.cta-btn:hover {
+    background-color: black;
+}
+
+/* Designs Section */
+.designs {
+    background-color: #f8f9fa;
+    padding: 50px 0;
+}
+
+.designs h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+}
+
+.designs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    justify-content: space-around;
+}
+
+/* Fashion Category Cards */
+.category-card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.category-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.category-card img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.category-card h3 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.category-card p {
+    font-size: 1em;
+    color: #333;
+}
+
+.category-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: black;
+    color: white;
+    font-size: 1em;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.category-btn:hover {
+    background-color: #333;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .designs-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .designs-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,163 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Contract Section */
+.contract-details {
+    background-color: #fff;
+    padding: 40px;
+    margin-top: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+h1 {
+    font-size: 2em;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.contract-info {
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #f7f7f7;
+}
+
+.contract-info p {
+    font-size: 1.1em;
+    margin: 10px 0;
+    padding-left: 10px;
+    border-left: 4px solid #27ae60;
+}
+
+.contract-info strong {
+    color: #2980b9;
+}
+
+.message {
+    background-color: #dff0d8;
+    color: #3c763d;
+    border: 1px solid #d6e9c6;
+    padding: 15px;
+    margin: 20px 0;
+    text-align: center;
+    border-radius: 8px;
+}
+
+/* Buttons */
+.contract-actions {
+    text-align: center;
+    margin-top: 30px;
+}
+
+button {
+    font-size: 1em;
+    padding: 12px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.accept-btn {
+    background-color: #27ae60;
+    color: white;
+}
+
+.accept-btn:hover {
+    background-color: #219150;
+}
+
+.reject-btn {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.reject-btn:hover {
+    background-color: #c0392b;
+}
+
+/* Typography and Layout Adjustments */
+p {
+    font-size: 1.1em;
+}
+
+h1, h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+h1 {
+    font-size: 2.5em;
+    color: #2c3e50;
+}
+
+h2 {
+    font-size: 1.8em;
+    color: #34495e;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    .contract-info p {
+        font-size: 1em;
+    }
+
+    button {
+        padding: 10px 15px;
+        font-size: 0.9em;
+    }
+}
+
+/* Link Styles */
+a {
+    color: #2980b9;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    color: #3498db;
+    text-decoration: underline;
+}
+
+/* Footer Styles (if applicable) */
+footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    background-color: #f7f7f7;
+    border-top: 1px solid #e0e0e0;
+}
+
+footer p {
+    font-size: 1em;
+    color: #666;
+}
